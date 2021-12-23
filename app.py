@@ -59,31 +59,71 @@ def index():
         for i in range(len(data_df)):
             dt.append(datetime.strptime(data_df['dates'].iloc[i],'%Y-%m-%d'))
         data_df['dates'] = dt
-        
+        data_df['month'] = pd.DatetimeIndex(data_df['dates']).month
+        mon = int(mon)
+        df_new=data_df.loc[(data_df['month']==mon)]
         
         typ = str(typp)
         if typ == 'Open':
             p = figure(x_axis_type='datetime',x_axis_label="Date", y_axis_label="Closing value")
-            p.line(x='dates', y='1. open', line_width=2, source=data_df)
+            p.line(x='dates', y='1. open', line_width=2, source=df_new)
         elif typ == 'Close':
             p = figure(x_axis_type='datetime',x_axis_label="Date", y_axis_label="Closing value")
-            p.line(x='dates', y='4. close', line_width=2, source=data_df)
+            p.line(x='dates', y='4. close', line_width=2, source=df_new)
         elif typ == 'High':
             p = figure(x_axis_type='datetime',x_axis_label="Date", y_axis_label="Closing value")
-            p.line(x='dates', y='2. high', line_width=2, source=data_df)
+            p.line(x='dates', y='2. high', line_width=2, source=df_new)
         else:
             p = figure(x_axis_type='datetime',x_axis_label="Date", y_axis_label="Closing value")
-            p.line(x='dates', y='3. low', line_width=2, source=data_df)
+            p.line(x='dates', y='3. low', line_width=2, source=df_new)
         
         # p = figure(title="Simple line example", x_axis_label="x", y_axis_label="y")
         # p.line(x=[0,1,2,3],y=[0,1,2,3])
         # script, div = components(p)
         # return render_template('plots.html', script=script, div=div)
         
+        min_month = mon_to_str(data_df['month'].min())
+        max_month = mon_to_str(data_df['month'].max())
+        mon_str = mon_to_str(mon)
+        
+        if len(df_new)==0:
+            error_message='Month out of range. Please select a different month. Data only available between '+min_month+' and '+max_month
+            #error_message += 'Data only available between'+min_month+'and'+max_month
+        else:
+            error_message = ''
+        
         #show(p)
         script, div = components(p)
-        return render_template('plots.html', symb = symb, typ= typ, script=script, div=div)
+        return render_template('plots.html', symb = symb, typ= typ, mon=mon_str,err=error_message, script=script, div=div)
         
+def mon_to_str(mon):
+    if mon==1:
+        mon_str='January'
+    elif mon==2:
+        mon_str='February'
+    elif mon==3:
+        mon_str = 'March'
+    elif mon==4:
+        mon_str = 'April'
+    elif mon==5:
+        mon_str = 'May'
+    elif mon==6:
+        mon_str = 'June'
+    elif mon==7:
+        mon_str = 'July'
+    elif mon==8:
+        mon_str = 'August'
+    elif mon==9:
+        mon_str = 'September'
+    elif mon==10:
+        mon_str = 'October'
+    elif mon==11:
+        mon_str='November'
+    elif mon==12:
+        mon_str = 'December'
+
+    return mon_str
+
 
 # @app.route('/display',methods=['POST'])
 # def data_import():
