@@ -40,6 +40,7 @@ def index():
         #app_lulu.vars['name'] = request.form['name_lulu']
         symb = request.form['ticker_lulu']
         typp = request.form['answer_from_layout_lulu']
+        mon = request.form['month_lulu']
         
         #url = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY&symbol=IBM&apikey=PVR1OFAF4I0GTWX7'
         path = 'https://www.alphavantage.co/query?function=TIME_SERIES_DAILY'
